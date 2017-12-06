@@ -35,6 +35,16 @@ turk_actions = turk_actions['action'].tolist()
 
 # combine volunteer and turker action types into unique list
 all_actions = set(vol_actions).union(set(turk_actions))
+all_actions = list(all_actions)
+all_actions.sort()
 
-df = pd.DataFrame(data={'event_type': list(all_actions)})
+df = pd.DataFrame(data={'event_type': all_actions})
 df.to_csv('../../data/interim/event-types.csv', index=False)
+
+# for each event type, create a feature for total, mean, and std
+features_per_action = ['total', 'per_pan_mean', 'per_pan_std']
+all_features = [(a + '_' + fa) for a in all_actions for fa in features_per_action]
+all_features.sort()
+
+df = pd.DataFrame(data={'feature': all_features})
+df.to_csv('../../data/interim/feature-names.csv', index=False)
